@@ -1,0 +1,39 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/setel-assigment/src",
+  "monorepo": true,
+  "root": "apps/setel-assigment",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/setel-assigment/tsconfig.app.json"
+  },
+  "projects": {
+    "setel-assigment": {
+      "type": "application",
+      "root": "apps/setel-assigment",
+      "entryFile": "main",
+      "sourceRoot": "apps/setel-assigment/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/setel-assigment/tsconfig.app.json"
+      }
+    },
+    "order-app": {
+      "type": "application",
+      "root": "apps/order-app",
+      "entryFile": "main",
+      "sourceRoot": "apps/order-app/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/order-app/tsconfig.app.json"
+      }
+    },
+    "payment-app": {
+      "type": "application",
+      "root": "apps/payment-app",
+      "entryFile": "main",
+      "sourceRoot": "apps/payment-app/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/payment-app/tsconfig.app.json"
+      }
+    }
+  }
+}
