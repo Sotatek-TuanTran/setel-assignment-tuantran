@@ -1,14 +1,14 @@
 import { 
   Entity,
   Column,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn
 } from "typeorm";
 
 @Entity('orders')
 export class Order {
-  @PrimaryColumn('order_id')
+  @PrimaryGeneratedColumn()
   order_id: number;
 
   @Column()
@@ -23,7 +23,7 @@ export class Order {
   @Column()
   delivery_date: Date;
 
-  @Column()
+  @Column({ nullable: true, default: 'created'})
   status: string;
 
   @CreateDateColumn()

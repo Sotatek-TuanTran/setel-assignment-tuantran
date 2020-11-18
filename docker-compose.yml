@@ -1,0 +1,9 @@
+version: '3'
+services:
+  mysql-development:
+    image: mariadb:10.5-focal
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: order_db
+    ports:
+      - "3306:3306"
