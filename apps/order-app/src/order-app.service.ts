@@ -32,6 +32,7 @@ export class OrderAppService {
     return this.orderRepository.findOneOrFail(orderId);
   }
 
+  // Call to Payment App to verify payment of the order
   async verifyPayment(order: Order): Promise<Order> {
     return new Promise((resolve, reject) => {
       this.paymentRMQClient.send('verify_payment_order', order)

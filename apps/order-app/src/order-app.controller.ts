@@ -19,7 +19,7 @@ export class OrderAppController {
     return await this.orderAppService.updateStatus(data.order_id, 'cancelled');
   }
 
-  @GrpcMethod('OrderService', 'CheckStatus')
+  @GrpcMethod('OrderService', 'checkStatus')
   async checkStatus(data: OrderByIdDto, metadata: Metadata, call: ServerUnaryCall<any>): Promise<any> {
     const order = await this.orderAppService.getDetail(data.order_id);
 
