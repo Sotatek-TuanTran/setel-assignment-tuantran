@@ -1,19 +1,82 @@
 version: '3'
+
 services:
   mariadb-server:
     image: mariadb:10.5-focal
     container_name: orderdb-server
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_USER: orderdb
       MYSQL_PASSWORD: order123
       MYSQL_DATABASE: order_db
+      APP_NAME: orderdb-server
     ports:
       - "3306:3306"
-
+    networks:
+      - setel-network
   rabbitmq-server:
     image: rabbitmq:3.8-rc-alpine
     container_name: rmq-server
+    restart: always
     ports:
       - "5672:5672"
-      - "15672:15672"
+    networks:
+      - setel-network
+  payment-app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.paymentapp
+      args:
+        project: payment-app
+    container_name: payment-app
+    environment:
+      - APP_NAME=payment-app
+    restart: on-failure
+    depends_on:
+      - rabbitmq-server
+    networks:
+      - setel-network
+  order-app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.orderapp
+      args:
+        project: order-app
+    container_name: order-app
+    environment:
+      - PORT=50051
+      - APP_NAME=order-app
+    depends_on:
+      - mariadb-server
+      - rabbitmq-server
+      - payment-app
+    restart: on-failure
+    ports:
+      - "50051:50051"
+    networks:
+      - setel-network
+  setel-api:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        project: setel-assigment
+    environment:
+      - PORT=3000
+      - APP_NAME=setel-api-gateway
+    container_name: setel-apigateway
+    restart: on-failure
+    depends_on:
+      - order-app
+    ports:
+      - "3000:3000"
+    networks:
+      - setel-network
+networks:
+  setel-network:
+    driver: bridge
+
+    
+    
+

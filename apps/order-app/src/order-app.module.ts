@@ -8,7 +8,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'mariadb-server',
       port: 3306,
       username: 'orderdb',
       password: 'order123',
@@ -22,7 +22,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'PAYMENT_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://0.0.0.0:5672'],
+          urls: ['amqp://rabbitmq-server:5672'],
           queue: 'payment_queue',
           queueOptions: {
             durable: false
