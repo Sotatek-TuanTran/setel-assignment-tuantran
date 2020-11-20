@@ -1,9 +1,19 @@
 version: '3'
 services:
-  mysql-development:
+  mariadb-server:
     image: mariadb:10.5-focal
+    container_name: orderdb-server
     environment:
       MYSQL_ROOT_PASSWORD: root123
+      MYSQL_USER: orderdb
+      MYSQL_PASSWORD: order123
       MYSQL_DATABASE: order_db
     ports:
       - "3306:3306"
+
+  rabbitmq-server:
+    image: rabbitmq:3.8-rc-alpine
+    container_name: rmq-server
+    ports:
+      - "5672:5672"
+      - "15672:15672"

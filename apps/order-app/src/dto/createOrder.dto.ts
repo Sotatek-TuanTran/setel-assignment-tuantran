@@ -6,4 +6,6 @@ export class CreateOrderDto {
   phone: string;
 
   delivery_date: Date;
+
+  amount_money: number;
 }

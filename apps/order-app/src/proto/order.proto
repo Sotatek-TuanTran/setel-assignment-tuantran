@@ -17,6 +17,7 @@ message CreateOrderReq {
   string address = 2;
   string phone = 3;
   string delivery_date = 4;
+  double amount_money = 5;
 }
 message Order {
   int32 order_id = 1;
@@ -24,9 +25,10 @@ message Order {
   string address = 3;
   string phone = 4;
   string delivery_date = 5;
-  string status = 6;
-  string created_at = 7;
-  string updated_at = 8;
+  double amount_money = 6;
+  string status = 7;
+  string created_at = 8;
+  string updated_at = 9;
 }
 
 message OrderStatus {

@@ -23,6 +23,9 @@ export class Order {
   @Column()
   delivery_date: Date;
 
+  @Column()
+  amount_money: number;
+
   @Column({ nullable: true, default: 'created'})
   status: string;
 

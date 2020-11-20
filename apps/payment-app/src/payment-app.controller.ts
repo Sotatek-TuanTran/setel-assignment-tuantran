@@ -1,3 +1,4 @@
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { Controller, Get } from '@nestjs/common';
 import { PaymentAppService } from './payment-app.service';
 
@@ -5,8 +6,10 @@ import { PaymentAppService } from './payment-app.service';
 export class PaymentAppController {
   constructor(private readonly paymentAppService: PaymentAppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.paymentAppService.getHello();
+  @MessagePattern('verify_payment_order')
+  async verifyPaymentOrder(@Payload() data: any): Promise<any> {
+    const result = this.paymentAppService.mockVerifyPaymentResult(data);
+
+    return { result, order_id: data.order_id }
   }
 }

@@ -10,8 +10,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root',
-      password: 'root123',
+      username: 'orderdb',
+      password: 'order123',
       database: 'order_db',
       entities: [Order],
       synchronize: true,
@@ -19,7 +19,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     TypeOrmModule.forFeature([Order]),
     ClientsModule.register([
       {
-        name: 'MATH_SERVICE',
+        name: 'PAYMENT_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://0.0.0.0:5672'],
