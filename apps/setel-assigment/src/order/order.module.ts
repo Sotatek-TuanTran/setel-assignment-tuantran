@@ -11,7 +11,7 @@ import { join } from 'path';
         transport: Transport.GRPC,
         options: {
           package: 'orders',
-          url: '0.0.0.0:50051',
+          url: 'order-app:50051',
           loader: {
             keepCase: true
           },
