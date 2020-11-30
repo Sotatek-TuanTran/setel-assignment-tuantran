@@ -3,6 +3,7 @@ syntax = "proto3";
 package orders;
 
 service OrderService {
+  rpc GetLists (Options) returns (ListOrders) {};
   rpc CreateOrder (CreateOrderReq) returns (Order) {};
   rpc CancelOrder (OrderById) returns (Order) {};
   rpc CheckStatus (OrderById) returns (OrderStatus) {};
@@ -33,4 +34,16 @@ message Order {
 
 message OrderStatus {
   string status = 1;
+}
+
+message Options {
+  int32 page = 1;
+  int32 perPage = 2;
+}
+
+message ListOrders {
+  int32 page = 1;
+  int32 perPage = 2;
+  int32 total = 3;
+  repeated Order data = 4;
 }

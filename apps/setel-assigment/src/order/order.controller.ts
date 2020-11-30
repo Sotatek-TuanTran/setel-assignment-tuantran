@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { CreateOrderDto } from './../../../order-app/src/dto/createOrder.dto';
-import { Body, Controller, Get, Post, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Patch, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 
 @Controller('/api/orders')
@@ -8,6 +8,11 @@ export class OrderController {
   constructor (
     private orderService: OrderService
   ) {}
+
+  @Get()
+  index(@Query() options: any): Observable<any> {
+    return this.orderService.getListOrders(options);
+  }
   
   @Post()
   store(@Body() orderDt: CreateOrderDto): Observable<any> {

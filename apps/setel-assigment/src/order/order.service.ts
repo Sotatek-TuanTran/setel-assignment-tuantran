@@ -13,6 +13,10 @@ export class OrderService implements OnModuleInit {
     this.orderGrpcClient = this.client.getService<OrderGrpcClient>('OrderService');
   }
 
+  getListOrders(options: any): Observable<any> {
+    return this.orderGrpcClient.getLists(options);
+  }
+
   createOrder(data: CreateOrderDto): Observable<any> {
     return this.orderGrpcClient.createOrder(data);
   }
