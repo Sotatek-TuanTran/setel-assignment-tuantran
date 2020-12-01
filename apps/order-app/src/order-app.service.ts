@@ -12,6 +12,31 @@ export class OrderAppService {
     @Inject('PAYMENT_SERVICE') private paymentRMQClient: ClientRMQ
   ) {}
 
+  async getLists(options: any): Promise<any> {
+    const { page = 1, perPage = 10 } = options;
+    const offset = page >= 1 ? ((page - 1) * perPage) : 0;
+    
+    const result = await this.orderRepository.findAndCount({
+      skip: offset,
+      take: perPage,
+    })
+    if (!result) {
+      return {
+        page,
+        perPage,
+        total: 0,
+        data: []
+      }
+    }
+    const [data , total ] = result
+    return {
+      page,
+      perPage,
+      total,
+      data
+    }
+  }
+
   async createOrder(data: CreateOrderDto): Promise<Order> {
     let order = await this.orderRepository.save(data);
     if (order) {

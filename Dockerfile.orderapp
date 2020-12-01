@@ -27,4 +27,4 @@ COPY --from=builder /build/apps ./apps
 COPY package.json package-lock.json ./
 RUN yarn install
 # Run server
-CMD ["node", "./dist/apps/order-app/main.js", ]
+CMD ["node", "./dist/apps/order-app/main.js"]

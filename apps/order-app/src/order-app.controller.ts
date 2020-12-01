@@ -9,6 +9,11 @@ import { GrpcMethod } from '@nestjs/microservices'
 export class OrderAppController {
   constructor(private readonly orderAppService: OrderAppService) {}
 
+  @GrpcMethod('OrderService', 'getLists')
+  async getLists(options: any, metadata: Metadata, call: ServerUnaryCall<any>): Promise<any> {
+    return await this.orderAppService.getLists(options);
+  }
+
   @GrpcMethod('OrderService', 'CreateOrder')
   async createOrder(data: CreateOrderDto, metadata: Metadata, call: ServerUnaryCall<any>): Promise<Order> {
     return await this.orderAppService.createOrder(data);
