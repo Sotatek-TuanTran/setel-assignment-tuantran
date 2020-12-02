@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This Setel Assignment project used NestJS for Backend and ReactJS for Frontend
 
 ## Environments
 
@@ -34,15 +34,14 @@ Your local must be installed Docker and Docker Compose
 ## Running the app
 
 ```bash
-# development
 $ docker-compose up
 ```
-Open the Web Browser and input "localhost" to the address bar (URL)
+
 ## Stop the app
 ```bash
 $ docker-compose down
 ```
 
 ## Test
-
+Open the Web Browser and input "localhost" to the address bar (URL)
 
