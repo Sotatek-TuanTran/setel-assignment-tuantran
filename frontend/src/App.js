@@ -17,6 +17,12 @@ class App extends Component {
       this.modalCreateOrder.toggle()
     }
   }
+
+  reloadListOrders = () => {
+    if (this.listOrdersEl) {
+      this.listOrdersEl.fetchOrders()
+    }
+  }
   
 
   render() {
@@ -36,10 +42,10 @@ class App extends Component {
             </Button>
           </Col>
           <Col xs="12" mt="2">
-            <ListOrders />
+            <ListOrders ref={ref => this.listOrdersEl = ref} />
           </Col>
         </Row>
-         <ModalCreateOrder ref={ref => this.modalCreateOrder = ref} />
+         <ModalCreateOrder reloadListOrder={this.reloadListOrders} ref={ref => this.modalCreateOrder = ref} />
       </Container>
     )
   }

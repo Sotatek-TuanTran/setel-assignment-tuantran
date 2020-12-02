@@ -1,19 +1,25 @@
 import { Observable } from 'rxjs';
-import { CreateOrderDto } from './../../../order-app/src/dto/createOrder.dto';
+import { CreateOrderDto } from './dto/createOrder.dto';
 import { Body, Controller, Get, Post, Param, Patch, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 
 @Controller('/api/orders')
 export class OrderController {
   constructor (
     private orderService: OrderService
   ) {}
-
+  @ApiQuery({ name: 'page' })
+  @ApiQuery({ name: 'perPage'})
   @Get()
   index(@Query() options: any): Observable<any> {
     return this.orderService.getListOrders(options);
   }
-  
+
+  @ApiBody({ type: CreateOrderDto })
+  @ApiCreatedResponse({
+    description: 'Created order'
+  })
   @Post()
   store(@Body() orderDt: CreateOrderDto): Observable<any> {
     return this.orderService.createOrder(orderDt)

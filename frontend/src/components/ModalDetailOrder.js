@@ -28,6 +28,7 @@ class ModalDetailOrder extends Component {
     })
     .then((res) => res.json())
     .then((result) => {
+      this.props.reloadList();
       this.closeModal()
     })
   }

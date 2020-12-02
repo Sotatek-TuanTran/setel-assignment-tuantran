@@ -1,4 +1,4 @@
-import { Table, Button, Badge } from 'reactstrap';
+import { Table, Button, Badge, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { Component } from 'react';
 import ModalDetailOrder from './ModalDetailOrder';
 class ListOrders extends Component {
@@ -11,12 +11,19 @@ class ListOrders extends Component {
         total: 0,
         data: []
       },
+      currentPage: 1,
+      perPage: 10,
       openModalDetail: false
     };
   }
 
   componentDidMount() {
     this.fetchOrders();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.currentPage !== this.state.currentPage) {
+      this.fetchOrders()
+    }
   }
 
   openModalDetailOrder = (selectedOrder) => {
@@ -26,7 +33,9 @@ class ListOrders extends Component {
   }
 
   fetchOrders = () => {
-    fetch('http://localhost:3333/api/orders', {
+    let { currentPage, perPage } = this.state;
+    let url = 'http://localhost:3333/api/orders?page=' + currentPage + '&perPage=' + perPage;
+    fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -60,15 +69,75 @@ class ListOrders extends Component {
     }
   }
 
+  paginate = (selectPage) => {
+    this.setState({ currentPage: selectPage })
+  }
+
+  renderPagination = () => {
+    let { currentPage } = this.state;
+    const { total, perPage } = this.state.listOrders;
+    const lastPage = total && total % perPage > 0 ? (Math.floor(total / perPage) + 1) : total / perPage;
+
+    return (
+      <Pagination>
+        { currentPage > 1 && <PaginationItem>
+            <PaginationLink first onClick={() => {
+              this.paginate(1)
+            }}>
+            </PaginationLink>
+          </PaginationItem>}
+        { currentPage > 1 && <PaginationItem >
+            <PaginationLink previous onClick={() => {
+              this.paginate(currentPage - 1)
+            }}>
+            </PaginationLink>
+          </PaginationItem>}
+        { currentPage - 2 >= 1 && <PaginationItem>
+            <PaginationLink onClick={() => this.paginate(currentPage - 2)}>
+              {currentPage - 2}
+            </PaginationLink>
+          </PaginationItem>}
+        { currentPage - 1 >= 1 && <PaginationItem>
+            <PaginationLink onClick={() => this.paginate(currentPage - 1)}>
+              {currentPage - 1}
+            </PaginationLink>
+          </PaginationItem>}
+        <PaginationItem active={true}>
+          <PaginationLink>
+            {currentPage}
+          </PaginationLink>
+        </PaginationItem>
+        { currentPage + 1 <= lastPage && <PaginationItem>
+            <PaginationLink onClick={() => this.paginate(currentPage + 1)}>
+              {currentPage + 1}
+            </PaginationLink>
+          </PaginationItem>}
+        { (currentPage + 2) <= lastPage && <PaginationItem>
+            <PaginationLink onClick={() => this.paginate(currentPage + 2)}>
+              {currentPage + 2}
+            </PaginationLink>
+          </PaginationItem>}
+        {currentPage < lastPage && <PaginationItem>
+            <PaginationLink next onClick={() => this.paginate(currentPage + 1)}>
+            </PaginationLink>
+          </PaginationItem>}
+        { currentPage < lastPage && <PaginationItem>
+            <PaginationLink last onClick={() => this.paginate(lastPage)}>
+            </PaginationLink>
+          </PaginationItem>}
+      </Pagination>
+    )
+  }
+
   render() {
     const { data = []} = this.state.listOrders;
     return (
       <div>
-        <ModalDetailOrder ref={ref => this.modalDetailOrder = ref} />
+        <ModalDetailOrder ref={ref => this.modalDetailOrder = ref} reloadList={this.fetchOrders} />
         <Table>
           <thead>
             <tr>
-              <th>No</th>
+              <th>NO</th>
               <th>Order ID</th>
               <th>Customer Name</th>
               <th>Status</th>
@@ -99,6 +168,7 @@ class ListOrders extends Component {
             })}
           </tbody>
         </Table>
+        {this.renderPagination()}
       </div>
     );
   }
