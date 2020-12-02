@@ -1,4 +1,3 @@
-'use strict'
 import 'bootstrap/dist/css/bootstrap.css';
 import { Row, Col, Button, Container } from 'reactstrap';
 import React, { Component } from 'react';

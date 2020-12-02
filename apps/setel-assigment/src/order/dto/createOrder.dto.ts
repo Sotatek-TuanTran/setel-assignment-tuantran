@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateOrderDto {
@@ -28,7 +28,6 @@ export class CreateOrderDto {
     description: 'The delivery date of order'
   })
   @IsNotEmpty()
-  @IsDate()
   delivery_date: Date;
 
   @ApiProperty({

@@ -1,4 +1,5 @@
 node_modules
+frontend/mode_modules
 coverage
 Dockerfile*
 LICENSE

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Modal, ModalHeader, ModalFooter, ModalBody, Row, Col, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalFooter, ModalBody, Button } from 'reactstrap';
 
 class ModalDetailOrder extends Component {
   constructor(props) {

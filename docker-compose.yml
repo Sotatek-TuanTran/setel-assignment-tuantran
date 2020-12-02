@@ -73,6 +73,20 @@ services:
       - "3333:3333"
     networks:
       - setel-network
+  setel-frontend:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.frontend
+    environment:
+      - PORT=3000
+    container_name: setel-frontend
+    restart: on-failure
+    depends_on:
+      - setel-api
+    ports:
+      - "80:3000"
+    networks:
+      - setel-network
 networks:
   setel-network:
     driver: bridge
