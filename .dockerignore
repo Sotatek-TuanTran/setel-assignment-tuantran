@@ -1,0 +1,12 @@
+node_modules
+frontend/mode_modules
+coverage
+Dockerfile*
+LICENSE
+README.md
+yarn-error.log
+.vscode
+.dockerignore
+.git
+.gitignore
+.prettier*

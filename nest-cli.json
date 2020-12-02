@@ -5,7 +5,9 @@
   "root": "apps/setel-assigment",
   "compilerOptions": {
     "webpack": true,
-    "tsConfigPath": "apps/setel-assigment/tsconfig.app.json"
+    "tsConfigPath": "apps/setel-assigment/tsconfig.app.json",
+    "assets": ["**/*.proto"],
+    "watchAssets": true
   },
   "projects": {
     "setel-assigment": {
