@@ -41,6 +41,9 @@ export class OrderAppService {
     let order = await this.orderRepository.save(data);
     if (order) {
       order = await this.verifyPayment(order)
+      setTimeout(async () => {
+        await this.updateStatus(order.order_id, 'delivered')
+      }, 10000)
     }
     return order;
   }
@@ -64,6 +67,8 @@ export class OrderAppService {
         .subscribe(async (res) => {
           if (res.result === 'verified' && order.order_id === res.order_id) {
             order = await this.updateStatus(order.order_id, 'confirmed')
+          } else {
+            order = await this.updateStatus(order.order_id, 'cancelled')
           }
           resolve(order)
         })
