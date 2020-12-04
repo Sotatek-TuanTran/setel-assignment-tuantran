@@ -33,7 +33,7 @@ export class OrderAppService {
       page,
       perPage,
       total,
-      data
+      data: data || []
     }
   }
 

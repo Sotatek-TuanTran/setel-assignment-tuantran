@@ -6,57 +6,24 @@ import {
   Label,
   FormGroup,
   Input,
-  Button } from 'reactstrap';
-import { Component } from 'react';
-class ModalCreateOrder extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      show: false,
-      customer_name: '',
-      address: '',
-      phone: '',
-      delivery_date: '',
-      amount_money: 0
-    }
-  }
+  Button
+} from 'reactstrap';
+import { useState, useEffect } from 'react';
 
-  toggle = () => {
-    this.setState({ show: !this.state.show });
-  }
+function ModalCreateOrder(props) {
+  let [customerName, setCustomerName] = useState('')
+  let [address, setAddress] = useState('');
+  let [phone, setPhone] = useState('')
+  let [deliveryDate, setDeliveryDate] = useState('')
+  let [amountMoney, setAmountMoney] = useState(0);
 
-  changeCustomerNameInput = (e) => {
-    const customerName = e.target.value ? e.target.value : '';
-    this.setState({ customer_name: customerName });
-  }
-
-  changeAddressInput = (e) => {
-    const address = e.target.value ? e.target.value : '';
-    this.setState({ address: address });
-  }
-
-  changePhoneInput = (e) => {
-    const phone = e.target.value ? e.target.value : '';
-    this.setState({ phone: phone });
-  }
-
-  changeDeliveryDateInput = (e) => {
-    const deliveryDate = e.target.value ? e.target.value : '';
-    this.setState({ delivery_date: deliveryDate });
-  }
-
-  changeAmountMoneyInput = (e) => {
-    const amountMoney = !Number.isNaN(e.target.value) ? parseFloat(e.target.value) : 0;
-    this.setState({ amount_money: amountMoney });
-  }
-
-  submit = () => {
+  const submit = () => {
     const reqData = {
-      customer_name: this.state.customer_name,
-      address: this.state.address,
-      phone: this.state.phone,
-      delivery_date: this.state.delivery_date,
-      amount_money: this.state.amount_money
+      customer_name: customerName,
+      address: address,
+      phone: phone,
+      delivery_date: deliveryDate,
+      amount_money: !Number.isNaN(amountMoney) ? parseFloat(amountMoney) : 0,
     }
 
     fetch('http://localhost:3333/api/orders', {
@@ -66,85 +33,82 @@ class ModalCreateOrder extends Component {
     }).then((res) => res.json())
     .then(result => {
       alert('Order was created successfully!')
-      this.props.reloadListOrder()
-      this.toggle()
+      props.hasCreatedOrder()
+      props.toggle()
     }, (err) => {
       alert('Order create fail!')
     })
   }
 
-  render() {
-    return (
-      <Modal 
-        isOpen={this.state.show}
-        toggle={this.toggle}
-      >
-        <ModalHeader>
-          Create Order
-        </ModalHeader>
-        <ModalBody>
-          <form className="form form-horizontal">
-            <FormGroup>
-              <Label><b>Customer Name:</b></Label>
-              <Input 
-                type="text"
-                name="customer_name" 
-                value={this.state.customer_name}
-                placeholder="Enter customer name..."
-                onChange={this.changeCustomerNameInput}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label><b>Address:</b></Label>
-              <Input 
-                type="text" 
-                name="address" 
-                value={this.state.address}
-                placeholder="Enter customer address..."
-                onChange={this.changeAddressInput}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label><b>Phone:</b></Label>
-              <Input 
-                type="text" 
-                name="phone" 
-                value={this.state.phone}
-                placeholder="Enter customer phone number..."
-                onChange={this.changePhoneInput}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label><b>Delivery Date:</b></Label>
-              <Input 
-                type="date" 
-                name="delivery_date" 
-                value={this.state.delivery_date}
-                placeholder="Enter customer name..."
-                onChange={this.changeDeliveryDateInput}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label><b>Amount of Money:</b></Label>
-              <Input 
-                type="number" 
-                name="amount_money"
-                value={this.state.amount_money}
-                placeholder="Enter Amount of money..."
-                onChange={this.changeAmountMoneyInput}
-              />
-            </FormGroup>
-          </form>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="success"
-            onClick={this.submit}
-          >Save</Button>
-        </ModalFooter>
-      </Modal>
-    );
-  }
-
+  return (
+    <Modal 
+      isOpen={props.isOpen}
+      toggle={props.toggle}
+    >
+      <ModalHeader>
+        Create Order
+      </ModalHeader>
+      <ModalBody>
+        <form className="form form-horizontal">
+          <FormGroup>
+            <Label><b>Customer Name:</b></Label>
+            <Input 
+              type="text"
+              name="customer_name" 
+              value={customerName}
+              placeholder="Enter customer name..."
+              onChange={(e) => { setCustomerName(e.target.value) }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label><b>Address:</b></Label>
+            <Input 
+              type="text" 
+              name="address" 
+              value={address}
+              placeholder="Enter customer address..."
+              onChange={(e) => { setAddress(e.target.value) }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label><b>Phone:</b></Label>
+            <Input 
+              type="text" 
+              name="phone" 
+              value={phone}
+              placeholder="Enter customer phone number..."
+              onChange={(e) => { setPhone(e.target.value) }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label><b>Delivery Date:</b></Label>
+            <Input 
+              type="date" 
+              name="delivery_date" 
+              value={deliveryDate}
+              placeholder="Enter customer name..."
+              onChange={(e) => { setDeliveryDate(e.target.value) }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label><b>Amount of Money:</b></Label>
+            <Input 
+              type="number" 
+              name="amount_money"
+              value={amountMoney}
+              placeholder="Enter Amount of money..."
+              onChange={(e) => { setAmountMoney(e.target.value) }}
+            />
+          </FormGroup>
+        </form>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="success"
+          onClick={submit}
+        >Save</Button>
+      </ModalFooter>
+    </Modal>
+  )
 }
 
 export default ModalCreateOrder;
