@@ -1,26 +1,11 @@
-import { Component } from 'react';
-import { Modal, ModalHeader, ModalFooter, ModalBody, Button } from 'reactstrap';
+import { useState } from 'react';
+import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Label } from 'reactstrap';
 
-class ModalDetailOrder extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      data: {}
-    }
-  }
+function ModalDetailOrder(props) {
+  let { isOpen, toggle, data } = props
 
-  toggle = (data) => {
-    this.setState({ open: !this.state.open, data })
-  }
-  
-  closeModal = () => {
-    this.toggle({})
-  }
-
-  cancelOrder = () => {
-    const order = this.state.data
-    fetch('http://localhost:3333/api/orders/' + order.order_id + '/cancel', {
+  const cancelOrder = () => {
+    fetch('http://localhost:3333/api/orders/' + data.order_id + '/cancel', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -28,48 +13,39 @@ class ModalDetailOrder extends Component {
     })
     .then((res) => res.json())
     .then((result) => {
-      this.props.reloadList();
-      this.closeModal()
+      props.reloadList();
+      toggle(false)
     })
   }
-
-  render() {
-    const { data } = this.state;
-    return (
-      <Modal
-        isOpen={this.state.open}
-        toggle={this.toggle}
-      >
-        <ModalHeader>
-          Order Detail
-        </ModalHeader>
-        <ModalBody>
-          <label>OrderID: {data.order_id}</label><br />
-          <label>Customer Name: {data.customer_name}</label><br />
-          <label>Address: {data.address}</label><br />
-          <label>Phone: {data.phone}</label><br />
-          <label>Amount: {data.amount_money}$</label><br />
-          <label>Delivary Date: {data.delivery_date}</label><br />
-          <label>Status: {data.status}</label><br />
-          <label></label><br />
-        </ModalBody>
-        <ModalFooter>
-          {data.status !== 'cancelled' ?
-            <Button color="danger"
-              onClick={this.cancelOrder}
-            >
-              Cancel Order
-            </Button> :
-            ""
-        }
+  
+  return (
+    <Modal isOpen={isOpen} toggle={toggle}>
+      <ModalHeader>
+        Order Detail
+      </ModalHeader>
+      <ModalBody>
+        <Label><b>Order ID:</b></Label>{data.order_id}<br/>
+        <Label><b>Customer Name:</b></Label>{data.customer_name}<br/>
+        <Label><b>Address:</b></Label>{data.address}<br/>
+        <Label><b>Phone:</b></Label>{data.phone}<br/>
+        <Label><b>Amount of money:</b></Label>{data.amount_money}$<br/>
+        <Label><b>Delivery Date:</b></Label>{data.delivery_date}<br/>
+        <Label><b>Status:</b></Label>{data.status}<br/>
+      </ModalBody>
+      <ModalFooter>
           <Button
-            color="secondary"
-            onClick={this.closeModal}
-          >Close</Button>
-        </ModalFooter>
-      </Modal>
-    )
-  }
+            color="danger"
+            onClick={() => { cancelOrder() }}
+          >Cancel Order</Button>
+        <Button
+          color="secondary"
+          onClick={() => {
+            toggle()
+          }}
+        >Close</Button>
+      </ModalFooter>
+    </Modal>
+  )
 }
 
 export default ModalDetailOrder;
