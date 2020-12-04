@@ -41,9 +41,11 @@ export class OrderAppService {
     let order = await this.orderRepository.save(data);
     if (order) {
       order = await this.verifyPayment(order)
-      setTimeout(async () => {
-        await this.updateStatus(order.order_id, 'delivered')
-      }, 10000)
+      if (order.status == 'confirmed') {
+        setTimeout(async () => {
+          await this.updateStatus(order.order_id, 'delivered')
+        }, 10000)
+      }
     }
     return order;
   }
