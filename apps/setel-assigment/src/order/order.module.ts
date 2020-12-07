@@ -15,7 +15,7 @@ import { join } from 'path';
           loader: {
             keepCase: true
           },
-          protoPath: join(__dirname, '../../../apps/setel-assigment/src/order/proto/order.proto')
+          protoPath: join(__dirname, '../../apps/setel-assigment/order/proto/order.proto')
         }
       }
     ])
