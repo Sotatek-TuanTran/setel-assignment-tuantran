@@ -20,19 +20,6 @@ import dbConfig from './config/database.config';
       })
     }),
     TypeOrmModule.forFeature([Order]),
-    // ClientsModule.register([
-    //   {
-    //     name: 'PAYMENT_SERVICE',
-    //     transport: Transport.RMQ,
-    //     options: {
-    //       urls: ['amqp://rabbitmq-server:5672'],
-    //       queue: 'payment_queue',
-    //       queueOptions: {
-    //         durable: false
-    //       },
-    //     },
-    //   },
-    // ]),
     ClientsModule.registerAsync([
       {
         inject: [ConfigService],
