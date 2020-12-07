@@ -1,12 +1,14 @@
 import { ClientRMQ } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/createOrder.dto';
 import { Order } from './models/order.entity';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class OrderAppService {
+  private readonly logger = new Logger(OrderAppService.name);
+
   constructor (
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     @Inject('PAYMENT_SERVICE') private paymentRMQClient: ClientRMQ
@@ -38,10 +40,13 @@ export class OrderAppService {
   }
 
   async createOrder(data: CreateOrderDto): Promise<Order> {
+    this.logger.log('save order to DB');
     let order = await this.orderRepository.save(data);
     if (order) {
+      this.logger.log('verifying payment of order: ' + order.order_id );
       order = await this.verifyPayment(order)
       if (order.status == 'confirmed') {
+        this.logger.log('mock change status of order from confirmed to delivered after 10 sec.');
         setTimeout(async () => {
           await this.updateStatus(order.order_id, 'delivered')
         }, 10000)
@@ -57,6 +62,7 @@ export class OrderAppService {
   }
 
   async updateStatus(orderId: number, status: string): Promise<Order> {
+    this.logger.log('update status of order to ' + status);
     await this.orderRepository.update(orderId, { status });
 
     return this.orderRepository.findOneOrFail(orderId);
@@ -64,12 +70,15 @@ export class OrderAppService {
 
   // Call to Payment App to verify payment of the order
   async verifyPayment(order: Order): Promise<Order> {
+    this.logger.log('Send a message to payment RMQ queue to verify payment of order order.order_id')
     return new Promise((resolve, reject) => {
       this.paymentRMQClient.send('verify_payment_order', order)
         .subscribe(async (res) => {
           if (res.result === 'verified' && order.order_id === res.order_id) {
+            this.logger.log('payment of order ' + order.order_id + ' was verified.')
             order = await this.updateStatus(order.order_id, 'confirmed')
           } else {
+            this.logger.log('payment of order ' + order.order_id + ' was declined')
             order = await this.updateStatus(order.order_id, 'cancelled')
           }
           resolve(order)
