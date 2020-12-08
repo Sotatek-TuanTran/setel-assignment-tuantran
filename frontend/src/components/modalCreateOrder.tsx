@@ -34,10 +34,19 @@ export function ModalCreateOrder(props: any) {
     .then(result => {
       alert('Order was created successfully!')
       props.hasCreatedOrder()
+      refreshForm();
       props.toggle()
     }, (err) => {
       alert('Order create fail!')
     })
+  }
+
+  const refreshForm = () => {
+    setCustomerName('');
+    setAddress('');
+    setPhone('');
+    setDeliveryDate('');
+    setAmountMoney(0);
   }
 
   return (
