@@ -4,7 +4,7 @@ import { Order } from './models/order.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
+import { Cron, CronExpression } from '@nestjs/schedule';
 @Injectable()
 export class OrderAppService {
   private readonly logger = new Logger(OrderAppService.name);
@@ -44,13 +44,7 @@ export class OrderAppService {
     let order = await this.orderRepository.save(data);
     if (order) {
       this.logger.log('verifying payment of order: ' + order.order_id );
-      order = await this.verifyPayment(order)
-      if (order.status == 'confirmed') {
-        this.logger.log('mock change status of order from confirmed to delivered after 10 sec.');
-        setTimeout(async () => {
-          await this.updateStatus(order.order_id, 'delivered')
-        }, 10000)
-      }
+      order = await this.verifyPayment(order);
     }
     return order;
   }
@@ -85,4 +79,11 @@ export class OrderAppService {
         })
     })
   }
+
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  async triggerDeliveredOrders() {
+    this.logger.log('mock change status of order from confirmed to delivered after 10 sec.');
+    await this.orderRepository.update({ status: 'confirmed' }, { status: 'delivered' })
+  }
+
 }

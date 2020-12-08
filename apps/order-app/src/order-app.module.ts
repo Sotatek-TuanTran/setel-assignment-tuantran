@@ -5,6 +5,7 @@ import { OrderAppController } from './order-app.controller';
 import { OrderAppService } from './order-app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import dbConfig from './config/database.config';
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import dbConfig from './config/database.config';
       isGlobal: true,
       load: [ dbConfig ]
     }),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
