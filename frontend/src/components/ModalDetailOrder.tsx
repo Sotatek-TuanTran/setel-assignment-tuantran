@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Label } from 'reactstrap';
 
-function ModalDetailOrder(props) {
+export function ModalDetailOrder(props: any) {
   let { isOpen, toggle, data } = props
 
   const cancelOrder = () => {
@@ -47,5 +46,3 @@ function ModalDetailOrder(props) {
     </Modal>
   )
 }
-
-export default ModalDetailOrder;

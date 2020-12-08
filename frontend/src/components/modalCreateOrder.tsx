@@ -8,9 +8,9 @@ import {
   Input,
   Button
 } from 'reactstrap';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function ModalCreateOrder(props) {
+export function ModalCreateOrder(props: any) {
   let [customerName, setCustomerName] = useState('')
   let [address, setAddress] = useState('');
   let [phone, setPhone] = useState('')
@@ -23,7 +23,7 @@ function ModalCreateOrder(props) {
       address: address,
       phone: phone,
       delivery_date: deliveryDate,
-      amount_money: !Number.isNaN(amountMoney) ? parseFloat(amountMoney) : 0,
+      amount_money: !Number.isNaN(amountMoney) ? parseFloat(amountMoney.toString()) : 0,
     }
 
     fetch('http://localhost:3333/api/orders', {
@@ -97,7 +97,7 @@ function ModalCreateOrder(props) {
               name="amount_money"
               value={amountMoney}
               placeholder="Enter Amount of money..."
-              onChange={(e) => { setAmountMoney(e.target.value) }}
+              onChange={(e) => { setAmountMoney(e.target.value as any) }}
             />
           </FormGroup>
         </form>
@@ -110,5 +110,3 @@ function ModalCreateOrder(props) {
     </Modal>
   )
 }
-
-export default ModalCreateOrder;

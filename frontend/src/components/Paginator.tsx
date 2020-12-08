@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
-function Paginator({ currentPage, lastPage, paginate }) {
-
+export function Paginator({ currentPage, lastPage, paginate }: any) {
   return (
     <Pagination>
       { currentPage > 1 && <PaginationItem>
@@ -49,4 +47,3 @@ function Paginator({ currentPage, lastPage, paginate }) {
     </Pagination>
   )
 }
-export default Paginator;

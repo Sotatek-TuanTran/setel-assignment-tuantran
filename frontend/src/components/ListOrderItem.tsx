@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import ModalDetailOrder from './ModalDetailOrder';
-import OrderStatus from './OrderStatus';
+import { ModalDetailOrder } from './ModalDetailOrder';
+import { OrderStatus }  from './OrderStatus';
 
-function ListOrderItem({ index, data, reloadList }) {
+export function ListOrderItem({ index, data, reloadList }: any) {
   let [isOpenModalDetail, setIsOpenModalDetail] = useState(false)
-  const toggleModalDetail = () => {
+  const toggleModalDetail = (): void => {
     setIsOpenModalDetail(!isOpenModalDetail);
   }
   return (
@@ -30,4 +30,3 @@ function ListOrderItem({ index, data, reloadList }) {
     </tr>
   )
 }
-export default ListOrderItem;

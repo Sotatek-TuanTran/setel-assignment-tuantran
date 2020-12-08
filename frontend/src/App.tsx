@@ -1,11 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import { Row, Col, Button, Container } from 'reactstrap';
-import ListOrders from './components/ListOrders';
-import ModalCreateOrder from './components/modalCreateOrder';
+import { ListOrders } from './components/ListOrders';
+import { ModalCreateOrder } from './components/modalCreateOrder';
 import { useState } from 'react';
 
 
-function App(props) {
+function App(props: any) {
   let [isOpenModalCreate, setIsOpenModalCreate ] = useState(false)
   let [hasNewOrder, setHasNewOrder] = useState(false)
   const toggleModalCreateOrder = () => {

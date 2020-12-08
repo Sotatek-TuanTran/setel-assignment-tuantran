@@ -1,6 +1,6 @@
 import { Badge } from 'reactstrap';
 
-function OrderStatus({ status }) {
+export function OrderStatus({ status }: any): any {
   let color;
   switch(status) {
     case 'created':
@@ -22,5 +22,5 @@ function OrderStatus({ status }) {
   return (
     <Badge color={color}>{status}</Badge>
   )
+  
 }
-export default OrderStatus;
