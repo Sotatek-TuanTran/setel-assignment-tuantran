@@ -1,6 +1,6 @@
 import { ClientRMQ } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/createOrder.dto';
-import { Order } from './models/order.entity';
+import { Order, OrderStatus } from './models/order.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -27,14 +27,17 @@ export class OrderAppService {
         page,
         perPage,
         total: 0,
+        lastPage: 1,
         data: []
       }
     }
     const [data , total ] = result
+    let lastPage = total ? (total % perPage != 0 ? Math.floor(total / perPage) + 1 : total / perPage) : 1;
     return {
       page,
       perPage,
       total,
+      lastPage,
       data: data || []
     }
   }
@@ -55,7 +58,7 @@ export class OrderAppService {
     return order;
   }
 
-  async updateStatus(orderId: number, status: string): Promise<Order> {
+  async updateStatus(orderId: number, status: OrderStatus): Promise<Order> {
     this.logger.log('update status of order to ' + status);
     await this.orderRepository.update(orderId, { status });
 
@@ -70,10 +73,10 @@ export class OrderAppService {
         .subscribe(async (res) => {
           if (res.result === 'verified' && order.order_id === res.order_id) {
             this.logger.log('payment of order ' + order.order_id + ' was verified.')
-            order = await this.updateStatus(order.order_id, 'confirmed')
+            order = await this.updateStatus(order.order_id, OrderStatus.CONFIRMED)
           } else {
             this.logger.log('payment of order ' + order.order_id + ' was declined')
-            order = await this.updateStatus(order.order_id, 'cancelled')
+            order = await this.updateStatus(order.order_id, OrderStatus.CANCELLED)
           }
           resolve(order)
         })
@@ -83,7 +86,6 @@ export class OrderAppService {
   @Cron(CronExpression.EVERY_10_SECONDS)
   async triggerDeliveredOrders() {
     this.logger.log('mock change status of order from confirmed to delivered after 10 sec.');
-    await this.orderRepository.update({ status: 'confirmed' }, { status: 'delivered' })
+    await this.orderRepository.update({ status: OrderStatus.CONFIRMED }, { status: OrderStatus.DELIVERED });
   }
-
 }

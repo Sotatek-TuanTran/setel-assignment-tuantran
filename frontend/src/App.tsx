@@ -4,8 +4,7 @@ import { ListOrders } from './components/ListOrders';
 import { ModalCreateOrder } from './components/modalCreateOrder';
 import { useState } from 'react';
 
-
-function App(props: any) {
+function App() {
   let [isOpenModalCreate, setIsOpenModalCreate ] = useState(false)
   let [hasNewOrder, setHasNewOrder] = useState(false)
   const toggleModalCreateOrder = () => {
@@ -31,10 +30,17 @@ function App(props: any) {
         </Button>
       </Col>
       <Col xs="12" mt="2">
-        <ListOrders hasNewOrder={hasNewOrder} hasCreatedOrder={hasCreatedOrder} />
+        <ListOrders 
+          hasNewOrder={hasNewOrder} 
+          hasCreatedOrder={hasCreatedOrder}
+        />
       </Col>
     </Row>
-     <ModalCreateOrder hasCreatedOrder={hasCreatedOrder} isOpen={isOpenModalCreate} toggle={toggleModalCreateOrder} />
+     <ModalCreateOrder 
+      hasCreatedOrder={hasCreatedOrder} 
+      isOpen={isOpenModalCreate} 
+      toggle={toggleModalCreateOrder}
+    />
   </Container>
   )
 }

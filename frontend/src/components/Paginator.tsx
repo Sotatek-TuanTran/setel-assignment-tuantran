@@ -1,6 +1,8 @@
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { PaginatorProps } from '../interfaces/props.interface';
 
-export function Paginator({ currentPage, lastPage, paginate }: any) {
+export function Paginator(props: PaginatorProps) {
+  const { currentPage, lastPage, paginate } = props
   return (
     <Pagination>
       { currentPage > 1 && <PaginationItem>
@@ -8,16 +10,22 @@ export function Paginator({ currentPage, lastPage, paginate }: any) {
           </PaginationLink>
         </PaginationItem>}
       { currentPage > 1 && <PaginationItem >
-          <PaginationLink previous onClick={() => paginate(parseInt(currentPage) - 1) }>
+          <PaginationLink previous 
+            onClick={() => paginate(currentPage - 1) }
+          >
           </PaginationLink>
         </PaginationItem>}
       { currentPage - 2 >= 1 && <PaginationItem>
-          <PaginationLink onClick={() => paginate(parseInt(currentPage) - 2) }>
+          <PaginationLink 
+            onClick={() => paginate(currentPage - 2) }
+          >
             {currentPage - 2}
           </PaginationLink>
         </PaginationItem>}
       { currentPage - 1 >= 1 && <PaginationItem>
-          <PaginationLink onClick={() => paginate(parseInt(currentPage) - 1) }>
+          <PaginationLink 
+            onClick={() => paginate(currentPage - 1) }
+          >
             {currentPage - 1}
           </PaginationLink>
         </PaginationItem>}
@@ -27,21 +35,29 @@ export function Paginator({ currentPage, lastPage, paginate }: any) {
         </PaginationLink>
       </PaginationItem>
       { currentPage + 1 <= lastPage && <PaginationItem>
-          <PaginationLink onClick={() => paginate(parseInt(currentPage) + 1)}>
+          <PaginationLink 
+            onClick={() => paginate(currentPage + 1)}
+          >
             {currentPage + 1}
           </PaginationLink>
         </PaginationItem>}
       { (currentPage + 2) <= lastPage && <PaginationItem>
-          <PaginationLink onClick={() => paginate(parseInt(currentPage) + 2) }>
+          <PaginationLink 
+            onClick={() => paginate(currentPage + 2) }
+          >
             {currentPage + 2}
           </PaginationLink>
         </PaginationItem>}
       {currentPage < lastPage && <PaginationItem>
-          <PaginationLink next onClick={() => paginate(currentPage + 1) }>
+          <PaginationLink next 
+            onClick={() => paginate(currentPage + 1) }
+          >
           </PaginationLink>
         </PaginationItem>}
       { currentPage < lastPage && <PaginationItem>
-          <PaginationLink last onClick={() => paginate(parseInt(lastPage)) }>
+          <PaginationLink last 
+            onClick={() => paginate(lastPage) }
+          >
           </PaginationLink>
         </PaginationItem>}
     </Pagination>

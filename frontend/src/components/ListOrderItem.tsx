@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
+import { ListOrderItemProps } from '../interfaces/props.interface';
 import { ModalDetailOrder } from './ModalDetailOrder';
 import { OrderStatus }  from './OrderStatus';
 
-export function ListOrderItem({ index, data, reloadList }: any) {
+export function ListOrderItem({ index, data, reloadList }: ListOrderItemProps) {
   let [isOpenModalDetail, setIsOpenModalDetail] = useState(false)
   const toggleModalDetail = (): void => {
     setIsOpenModalDetail(!isOpenModalDetail);
@@ -26,7 +27,12 @@ export function ListOrderItem({ index, data, reloadList }: any) {
         >&nbsp;...&nbsp;
         </Button>
       </td>
-      <ModalDetailOrder isOpen={isOpenModalDetail} toggle={toggleModalDetail} data={data} reloadList={reloadList} />
+      <ModalDetailOrder 
+        isOpen={isOpenModalDetail} 
+        toggle={toggleModalDetail} 
+        data={data} 
+        reloadList={reloadList}
+      />
     </tr>
   )
 }

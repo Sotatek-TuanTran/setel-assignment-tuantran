@@ -1,10 +1,13 @@
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Label } from 'reactstrap';
+import { ModalDetailOrderProps } from '../interfaces/props.interface';
+const ORDER_API_URL: string = process.env.REACT_APP_ORDER_API_URL as string;
 
-export function ModalDetailOrder(props: any) {
+export function ModalDetailOrder(props: ModalDetailOrderProps) {
   let { isOpen, toggle, data } = props
 
   const cancelOrder = () => {
-    fetch('http://localhost:3333/api/orders/' + data.order_id + '/cancel', {
+    const url = ORDER_API_URL + '/' + data.order_id + '/cancel'
+    fetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -32,15 +35,15 @@ export function ModalDetailOrder(props: any) {
         <Label><b>Status:</b></Label>{data.status}<br/>
       </ModalBody>
       <ModalFooter>
-          <Button
-            color="danger"
-            onClick={() => { cancelOrder() }}
-          >Cancel Order</Button>
+          {data.status !== 'cancelled' && data.status !== 'delivered' &&
+            <Button
+              color="danger"
+              onClick={cancelOrder}
+            >Cancel Order</Button>
+          }
         <Button
           color="secondary"
-          onClick={() => {
-            toggle()
-          }}
+          onClick={toggle}
         >Close</Button>
       </ModalFooter>
     </Modal>

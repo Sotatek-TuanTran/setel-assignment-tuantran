@@ -1,5 +1,5 @@
 import { OrderByIdDto } from './dto/orderById.dto';
-import { Order } from './models/order.entity';
+import { Order, OrderStatus } from './models/order.entity';
 import { Controller, Param } from '@nestjs/common';
 import { Metadata, ServerUnaryCall  } from 'grpc';
 import { OrderAppService } from './order-app.service';
@@ -21,7 +21,7 @@ export class OrderAppController {
 
   @GrpcMethod('OrderService', 'cancelOrder')
   async cancelOrder(data: OrderByIdDto, metadata?: Metadata, call?: ServerUnaryCall<any>): Promise<Order> {
-    return await this.orderAppService.updateStatus(data.order_id, 'cancelled');
+    return await this.orderAppService.updateStatus(data.order_id, OrderStatus.CANCELLED);
   }
 
   @GrpcMethod('OrderService', 'checkStatus')

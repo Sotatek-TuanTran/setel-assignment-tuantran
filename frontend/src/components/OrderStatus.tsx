@@ -1,18 +1,20 @@
 import { Badge } from 'reactstrap';
+import { OrderStatusProps, OrderStatusEnum } from '../interfaces/props.interface';
 
-export function OrderStatus({ status }: any): any {
+export function OrderStatus(props: OrderStatusProps): any {
+  const status: OrderStatusEnum | string = props.status;
   let color;
   switch(status) {
-    case 'created':
+    case OrderStatusEnum.CREATED:
       color = 'primary';
       break;
-    case 'confirmed':
+    case OrderStatusEnum.CONFIRMED:
       color = 'success';
       break;
-    case 'cancelled':
+    case OrderStatusEnum.CANCELLED:
       color = 'danger'
       break;
-    case 'delivered':
+    case OrderStatusEnum.DELIVERED:
       color = 'warning';
       break;
     default:

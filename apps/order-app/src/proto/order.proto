@@ -45,5 +45,6 @@ message ListOrders {
   int32 page = 1;
   int32 perPage = 2;
   int32 total = 3;
-  repeated Order data = 4;
+  int32: lastPage: 4;
+  repeated Order data = 5;
 }

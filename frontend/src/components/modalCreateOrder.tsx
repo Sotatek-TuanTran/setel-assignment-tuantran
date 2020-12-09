@@ -9,13 +9,15 @@ import {
   Button
 } from 'reactstrap';
 import { useState } from 'react';
+import { ModalCreateOrderProps } from '../interfaces/props.interface';
+const ORDER_API_URL: string = process.env.REACT_APP_ORDER_API_URL as string;
 
-export function ModalCreateOrder(props: any) {
-  let [customerName, setCustomerName] = useState('')
+export function ModalCreateOrder(props: ModalCreateOrderProps) {
+  let [customerName, setCustomerName] = useState('');
   let [address, setAddress] = useState('');
-  let [phone, setPhone] = useState('')
-  let [deliveryDate, setDeliveryDate] = useState('')
-  let [amountMoney, setAmountMoney] = useState(0);
+  let [phone, setPhone] = useState('');
+  let [deliveryDate, setDeliveryDate] = useState('');
+  let [amountMoney, setAmountMoney] = useState<number | string>(0);
 
   const submit = () => {
     const reqData = {
@@ -24,9 +26,9 @@ export function ModalCreateOrder(props: any) {
       phone: phone,
       delivery_date: deliveryDate,
       amount_money: !Number.isNaN(amountMoney) ? parseFloat(amountMoney.toString()) : 0,
-    }
+    };
 
-    fetch('http://localhost:3333/api/orders', {
+    fetch(ORDER_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(reqData)
@@ -38,7 +40,7 @@ export function ModalCreateOrder(props: any) {
       props.toggle()
     }, (err) => {
       alert('Order create fail!')
-    })
+    });
   }
 
   const refreshForm = () => {
@@ -106,15 +108,20 @@ export function ModalCreateOrder(props: any) {
               name="amount_money"
               value={amountMoney}
               placeholder="Enter Amount of money..."
-              onChange={(e) => { setAmountMoney(e.target.value as any) }}
+              onChange={(e) => {
+                let value: number | string = !Number.isNaN(parseFloat(e.target.value)) ? parseFloat(e.target.value) : '';
+                setAmountMoney(value);
+              }}
             />
           </FormGroup>
         </form>
       </ModalBody>
       <ModalFooter>
-        <Button color="success"
+        <Button
+          color="success"
           onClick={submit}
-        >Save</Button>
+        >Save
+        </Button>
       </ModalFooter>
     </Modal>
   )
