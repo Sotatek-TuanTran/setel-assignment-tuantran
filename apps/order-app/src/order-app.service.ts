@@ -5,40 +5,35 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import {
+  VERIFY_PAYMENT_OF_ORDER,
+  PAYMENT_RMQ_SERVICE,
+} from './constants/payment-service.constant';
+import { calcSkipOffset } from './helpers/index.helper';
+
 @Injectable()
 export class OrderAppService {
   private readonly logger = new Logger(OrderAppService.name);
 
   constructor (
     @InjectRepository(Order) private orderRepository: Repository<Order>,
-    @Inject('PAYMENT_SERVICE') private paymentRMQClient: ClientRMQ
+    @Inject(PAYMENT_RMQ_SERVICE) private paymentRMQClient: ClientRMQ
   ) {}
 
   async getLists(options: any): Promise<any> {
     const { page = 1, perPage = 10 } = options;
-    const offset = page >= 1 ? ((page - 1) * perPage) : 0;
+    const offset = calcSkipOffset(page, perPage);
     
     const result = await this.orderRepository.findAndCount({
       skip: offset,
       take: perPage,
     })
-    if (!result) {
-      return {
-        page,
-        perPage,
-        total: 0,
-        lastPage: 1,
-        data: []
-      }
-    }
-    const [data , total ] = result
-    let lastPage = total ? (total % perPage != 0 ? Math.floor(total / perPage) + 1 : total / perPage) : 1;
+    const [data = [] , total = 0] = Array.isArray(result) ? result : []
     return {
       page,
       perPage,
       total,
-      lastPage,
-      data: data || []
+      data
     }
   }
 
@@ -52,24 +47,22 @@ export class OrderAppService {
     return order;
   }
 
-  async getDetail(orderId: number): Promise<Order> {
-    const order = await this.orderRepository.findOneOrFail(orderId);
-
-    return order;
+  async getDetail(orderId: number): Promise<Order | null> {
+    return this.orderRepository.findOneOrFail(orderId);
   }
 
-  async updateStatus(orderId: number, status: OrderStatus): Promise<Order> {
+  async updateStatus(orderId: number, status: OrderStatus): Promise<Order | null> {
     this.logger.log('update status of order to ' + status);
     await this.orderRepository.update(orderId, { status });
 
-    return this.orderRepository.findOneOrFail(orderId);
+    return this.getDetail(orderId)
   }
 
   // Call to Payment App to verify payment of the order
   async verifyPayment(order: Order): Promise<Order> {
     this.logger.log('Send a message to payment RMQ queue to verify payment of order order.order_id')
     return new Promise((resolve, reject) => {
-      this.paymentRMQClient.send('verify_payment_order', order)
+      this.paymentRMQClient.send(VERIFY_PAYMENT_OF_ORDER, order)
         .subscribe(async (res) => {
           if (res.result === 'verified' && order.order_id === res.order_id) {
             this.logger.log('payment of order ' + order.order_id + ' was verified.')

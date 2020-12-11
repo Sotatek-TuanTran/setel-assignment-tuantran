@@ -1,3 +1,4 @@
+import { IPagination } from './interfaces/ordergrpc.interface';
 import { Observable } from 'rxjs';
 import { CreateOrderDto } from './dto/createOrder.dto';
 import { Body, Controller, Get, Post, Param, Patch, Query, Logger } from '@nestjs/common';
@@ -13,7 +14,7 @@ export class OrderController {
   @ApiQuery({ name: 'page' })
   @ApiQuery({ name: 'perPage'})
   @Get()
-  index(@Query() options: any): Observable<any> {
+  index(@Query() options: IPagination): Observable<any> {
     this.logger.log('received request get list orders from React-app client')
     return this.orderService.getListOrders(options);
   }

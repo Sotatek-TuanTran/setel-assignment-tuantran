@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { OrderGrpcClient } from './interfaces/ordergrpc.interface';
+import { IOrderGrpcClient, IPagination } from './interfaces/ordergrpc.interface';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { CreateOrderDto } from 'apps/order-app/src/dto/createOrder.dto';
@@ -8,14 +8,14 @@ import { CreateOrderDto } from 'apps/order-app/src/dto/createOrder.dto';
 export class OrderService implements OnModuleInit {
   private readonly logger = new Logger(OrderService.name);
 
-  private orderGrpcClient: OrderGrpcClient;
+  private orderGrpcClient: IOrderGrpcClient;
   constructor(@Inject('ORDER_SERVICE') private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.orderGrpcClient = this.client.getService<OrderGrpcClient>('OrderService');
+    this.orderGrpcClient = this.client.getService<IOrderGrpcClient>('OrderService');
   }
 
-  getListOrders(options: any): Observable<any> {
+  getListOrders(options: IPagination): Observable<any> {
     this.logger.log('call order-app to get paginated list orders.')
     return this.orderGrpcClient.getLists(options);
   }

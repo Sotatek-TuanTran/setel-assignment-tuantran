@@ -4,12 +4,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn
-} from "typeorm";
+} from 'typeorm';
 
 export enum OrderStatus {
-  CREATED = "created",
-  CONFIRMED = "confirmed",
-  CANCELLED = "cancelled",
+  CREATED = 'created',
+  CONFIRMED = 'confirmed',
+  CANCELLED = 'cancelled',
   DELIVERED = 'delivered'
 }
 

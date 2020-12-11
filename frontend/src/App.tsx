@@ -7,13 +7,15 @@ import { useState } from 'react';
 function App() {
   let [isOpenModalCreate, setIsOpenModalCreate ] = useState(false)
   let [hasNewOrder, setHasNewOrder] = useState(false)
+
   const toggleModalCreateOrder = () => {
     setIsOpenModalCreate(!isOpenModalCreate)
   }
-  const hasCreatedOrder = () => {
+
+  const onOrderCreated = () => {
     setHasNewOrder(!hasNewOrder)
-    // listOrdersEl.fetchOrders()
   }
+
   return (
     <Container>
     <Row>
@@ -32,12 +34,12 @@ function App() {
       <Col xs="12" mt="2">
         <ListOrders 
           hasNewOrder={hasNewOrder} 
-          hasCreatedOrder={hasCreatedOrder}
+          onOrderCreated={onOrderCreated}
         />
       </Col>
     </Row>
      <ModalCreateOrder 
-      hasCreatedOrder={hasCreatedOrder} 
+      onOrderCreated={onOrderCreated} 
       isOpen={isOpenModalCreate} 
       toggle={toggleModalCreateOrder}
     />

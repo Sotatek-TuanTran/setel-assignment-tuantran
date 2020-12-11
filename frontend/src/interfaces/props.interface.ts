@@ -6,7 +6,7 @@ export enum OrderStatusEnum {
 }
 
 export interface ListOrdersProps {
-  hasCreatedOrder: Function;
+  onOrderCreated: Function;
   hasNewOrder: boolean;
 }
 export interface OrderItem {
@@ -37,7 +37,7 @@ export interface ListOrderItemProps {
 
 export interface ModalCreateOrderProps {
   isOpen: boolean;
-  hasCreatedOrder: Function;
+  onOrderCreated: Function;
   toggle: any;
 }
 

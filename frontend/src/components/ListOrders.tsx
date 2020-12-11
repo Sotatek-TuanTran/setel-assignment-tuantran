@@ -33,7 +33,7 @@ export function ListOrders(props: ListOrdersProps) {
   useEffect(() => {
     fetchOrders();
     if (props.hasNewOrder) {
-      props.hasCreatedOrder()
+      props.onOrderCreated()
     }
   }, [currentPage, props.hasNewOrder]);
 

@@ -35,7 +35,7 @@ export function ModalCreateOrder(props: ModalCreateOrderProps) {
     }).then((res) => res.json())
     .then(result => {
       alert('Order was created successfully!')
-      props.hasCreatedOrder()
+      props.onOrderCreated()
       refreshForm();
       props.toggle()
     }, (err) => {
@@ -97,7 +97,7 @@ export function ModalCreateOrder(props: ModalCreateOrderProps) {
               type="date" 
               name="delivery_date" 
               value={deliveryDate}
-              placeholder="Enter customer name..."
+              placeholder="Enter the delivery date..."
               onChange={(e) => { setDeliveryDate(e.target.value) }}
             />
           </FormGroup>
