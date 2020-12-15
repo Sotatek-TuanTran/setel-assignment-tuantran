@@ -4,12 +4,13 @@ import { Order, OrderStatus } from './models/order.entity';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   VERIFY_PAYMENT_OF_ORDER,
   PAYMENT_RMQ_SERVICE,
 } from './constants/payment-service.constant';
 import { calcSkipOffset } from './helpers/index.helper';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class OrderAppService {
@@ -17,7 +18,8 @@ export class OrderAppService {
 
   constructor (
     @InjectRepository(Order) private orderRepository: Repository<Order>,
-    @Inject(PAYMENT_RMQ_SERVICE) private paymentRMQClient: ClientRMQ
+    @Inject(PAYMENT_RMQ_SERVICE) private paymentRMQClient: ClientRMQ,
+    @InjectQueue('deliver_orders') private deliverOrderQueue: Queue
   ) {}
 
   async getLists(options: any): Promise<any> {
@@ -43,6 +45,11 @@ export class OrderAppService {
     if (order) {
       this.logger.log('verifying payment of order: ' + order.order_id );
       order = await this.verifyPayment(order);
+      const job = await this.deliverOrderQueue.add('delivered_order', order, {
+        delay: 10000, // delay execute job after 10 seconds
+        attempts: 2,
+        removeOnComplete: true
+      });
     }
     return order;
   }
@@ -55,7 +62,13 @@ export class OrderAppService {
     this.logger.log('update status of order to ' + status);
     await this.orderRepository.update(orderId, { status });
 
-    return this.getDetail(orderId)
+    return this.getDetail(orderId);
+  }
+
+  async deliveredOrder(orderId: number): Promise<Order | null> {
+    await this.orderRepository.update({ order_id: orderId, status: OrderStatus.CONFIRMED }, { status: OrderStatus.DELIVERED });
+
+    return this.getDetail(orderId);
   }
 
   // Call to Payment App to verify payment of the order
@@ -74,11 +87,5 @@ export class OrderAppService {
           resolve(order)
         })
     })
-  }
-
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  async triggerDeliveredOrders() {
-    this.logger.log('mock change status of order from confirmed to delivered after 10 sec.');
-    await this.orderRepository.update({ status: OrderStatus.CONFIRMED }, { status: OrderStatus.DELIVERED });
   }
 }
